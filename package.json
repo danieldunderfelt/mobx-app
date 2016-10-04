@@ -19,7 +19,7 @@
     "mobx-app",
     "structure"
   ],
-  "author": "Daniel Dunderfelt <dunderfeltdaniel@gmail.com",
+  "author": "Daniel Dunderfelt <dunderfeltdaniel@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
     "lodash": "^4.16.3",
