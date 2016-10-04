@@ -1,4 +1,4 @@
-import { observable, extendObservable, asReference } from 'mobx'
+import { observable } from 'mobx'
 import _ from 'lodash'
 
 export default (stores = {}, initialData = {}) => {
