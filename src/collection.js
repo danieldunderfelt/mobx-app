@@ -76,8 +76,11 @@ export default (collection, itemFactory = _.identity) => {
     const spliceIndex = existingIdx > -1 ? existingIdx : 0
     const spliceRemove = existingIdx > -1 ? 1 : 0
 
-    // Use splice to put the item first, push otherwise
-    first ? collection.splice(spliceIndex, spliceRemove, preparedItem) : collection.push(preparedItem)
+    if(existingIdx > -1 && replace) collection.splice(spliceIndex, spliceRemove, preparedItem)
+    else {
+      first ? collection.unshift(preparedItem) : collection.push(preparedItem)
+    }
+
     return item
   })
 
@@ -136,6 +139,16 @@ export default (collection, itemFactory = _.identity) => {
 
     // We've acomplished nothing.
     return false
+  })
+
+  const clear = action((filterFunction = false) => {
+    if(!filterFunction) return collection.clear()
+
+    collection.forEach((item, idx) => {
+      if(filterFunction(item) === true) collection.splice(idx, 1)
+    })
+
+    return collection
   })
 
   return {

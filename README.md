@@ -337,10 +337,11 @@ If the first argument is a number, the item at that index will be removed. If it
 the idProp of the same value will be removed. If it is an object, the item will be found from the collection
 by the idProp and removed.
 
-Please use a higher-ordfer function to customize this behaviour if needed.
+Please use a higher-order function to customize this behaviour if needed.
 
-##### `itemActions.clearAll()`
-Clears the collection indiscriminately.
+##### `itemActions.clear(matcherFunction = false)`
+Clears the collection completely if a matcher function is not passed. If a matcher is passed, each item the
+matcher returns true for will be removed from the collection.
 
 ---
 
@@ -390,5 +391,4 @@ truth to the various helpers that I have deviced in various projects.
 ### Next up:
 - Add tests (hey, this is only a quick and dirty braindump so far!)
 - Include more actions (mobx maps up next!)
-- Find a simple way to import the `/native` stuff from `mobx-react` when in an RN project
 - Listen to feedback and evolve mobx-app!
