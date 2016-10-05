@@ -27,8 +27,7 @@
   "license": "MIT",
   "peerDependencies": {
     "lodash": ">=4",
-    "mobx": ">=2",
-    "mobx-react": ">=3"
+    "mobx": ">=2"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",

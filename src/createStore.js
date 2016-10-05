@@ -6,7 +6,7 @@ export default (stores = {}, initialData = {}) => {
   const actions = {}
 
   _.forOwn(stores, (store, key) => {
-    const storeActions = store(state, initialData, actions)
+    const storeActions = store(state, initialData, key)
     actions[ key ] = storeActions
   })
 

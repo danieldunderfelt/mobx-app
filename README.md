@@ -116,7 +116,7 @@ const storeActions = state => {
         const newItems = await fetch('https://example.com/api/items')
         replaceItems(newItems)
     }
-
+    
     return {
         fetchItems,
         replaceItems,
@@ -145,7 +145,7 @@ An example:
 import { createStore } from 'mobx-app'
 
 const stores = {
-    Store
+  Store
 }
 
 const { state, actions } = createStore(stores, initialData)
@@ -158,23 +158,23 @@ Since mobx-app is unabashedly React-focused, the next step is to use `Provider` 
 import { Provider } from 'mobx-react'
 
 const app = (
-    <Provider actions={ actions } state={ state }>
-        <YourApp />
-    </Provider>
+  <Provider actions={ actions } state={ state }>
+    <YourApp />
+  </Provider>
 )
 ```
 
-Access these either with `@inject` from `mobx-react`, or with `@connect` from `mobx-app`. `connect` is a
-simple wrapper over `inject` that auto-injects the state as a prop. Connect can also take a list of store
+Access these with `@inject` from `mobx-react` using the `app` helper as a selector function. `app` returns a
+function that instructs `@inject` which props to pass the component. `app` can take a list of store
 names as arguments, that will result in the corresponding actions to be injected as props under the name.
 
 Remember to still use `observer`!
 
 ```javascript
 import { observer } from 'mobx-react'
-import { connect } from 'mobx-app'
+import { app } from 'mobx-app'
 
-@connect('Store')
+@inject(app('Store'))
 @observer
 class MyComponent extends Component {
   
@@ -243,15 +243,22 @@ const stores = {
 }
 ```
 
-and 2. a map of initial data. createStore returns an object with the keys `state`, which is a mobx-observable
+and 2. an object representing initial data. createStore returns an object with the keys `state`, which is a mobx-observable
 object, and `actions` which is a plain object with the same keys as above, but containing the actions returned
 from the respective stores. The state is not partitioned according to the keys by default.
 
+The store factories passed through `createStore` will be called with the following arguments:
+
+`store(state, initialData, name)`
+
+State is the global state, initialData is the initial data and name is the key that the store was registered under
+in the initial store map that you passed to `createStore`. Use the name for namespacing the state if you need to.
+
 ---
 
-### `@connect()`
+### `@app()`
 
-Light wrapper over mobx's `inject`.
+Selector function factory for mobx-react's `inject`.
 
 Receives an argument list of arbitrary length of action names to add to the `props` of React components.
 It will also in all cases add the state as a prop of the component. If called with no arguments, all
@@ -261,15 +268,15 @@ will be added to the props.
 ```javascript
 // Props added to the component:
 // { state, ItemStore }
-@connect('ItemStore')
+@inject(app('ItemStore'))
 
 // Props added to the component:
 // { state, ItemStore, OtherStore }
-@connect()
+@inject(app())
 
 // Props added to the component:
 // { state }
-@connect('state')
+@inject(app('state'))
 ```
 
 So yeah, it might be a bad idea to call your store `state`. The special case was added because the main job of
@@ -277,7 +284,7 @@ React components is to render the current state as UI. To mutate the state is se
 a way to prevent littering your component props.
 
 Also, I highly recommend to capitalize the name of the stores. When developing, you may want to pass in props of the
-same name as some of your stores. Normal `inject` rules apply, and your prop will overwrite what `connect` wanted to
+same name as some of your stores. Normal `inject` rules apply, and your prop will overwrite what `app` wanted to
 inject.
 
 ---
@@ -318,7 +325,7 @@ splice) or, the default, as the last element in the collection (using push).
 updateItem will use `extendObservable` with the new data on an existing item if found in the collection.
 Use the idProp argument to define how an existing item is matched.
 
-##### `itemActions.updateorAdd(item, idProp = 'id', first = false) => item`
+##### `itemActions.updateOrAdd(item, idProp = 'id', first = false) => item`
 This action will first determine if the item exists in the collection. If it does, `updateItem` will be
 invoked. If it doesn't, `addItem` will be invoked.
 

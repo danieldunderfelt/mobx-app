@@ -61,8 +61,8 @@ export default (collection, itemFactory = _.identity) => {
   // Returns the (unprocessed) added item.
   const addItem = action((item, unique = 'id', replace = false, first = false) => {
     if ( _.isArrayLike(item) ) {
-      console.warn('Tried to add an array as a singular item to a collection. Use addItems instead!')
-      return false
+      console.warn('Tried to add an array as a singular item to a collection. Using addItems instead.')
+      return addItems(item, unique)
     }
 
     // Uniqueness check

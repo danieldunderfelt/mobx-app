@@ -1,11 +1,11 @@
 import createStore from './createStore'
-import connect from './connect'
+import app from './app'
 import collection from './collection'
 import value from './value'
 
 export {
   createStore,
-  connect,
+  app,
   collection,
   value
 }
