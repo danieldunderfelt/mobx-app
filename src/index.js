@@ -3,7 +3,7 @@ import connect from './connect'
 import collection from './collection'
 import value from './value'
 
-export default {
+export {
   createStore,
   connect,
   collection,
