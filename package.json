@@ -1,6 +1,6 @@
 {
   "name": "mobx-app",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "MobX, with a functional structure.",
   "main": "src/index",
   "scripts": {
