@@ -2,6 +2,10 @@
   "name": "mobx-app",
   "version": "0.0.1",
   "description": "MobX, with a functional structure.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/danieldunderfelt/mobx-app.git"
+  },
   "main": "src/index",
   "scripts": {
     "build": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
@@ -22,9 +26,9 @@
   "author": "Daniel Dunderfelt <dunderfeltdaniel@gmail.com>",
   "license": "MIT",
   "peerDependencies": {
-    "lodash": "^4.16.3",
-    "mobx": "^2.5.2",
-    "mobx-react": "^3.5.7"
+    "lodash": ">=4",
+    "mobx": ">=2",
+    "mobx-react": ">=3"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
