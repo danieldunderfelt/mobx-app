@@ -287,12 +287,15 @@ inject.
 The collection action factory eases your interactions with observable collections. The factory takes an
 observable array as its only argument and returns all collection actions.
 
+A collection is usually an array of objects, but `collection` will also, in most cases, support arrays
+of simple values.
+
 `const itemActions = collection(itemCollection)`
 
 ##### `itemActions.setItems(items) => itemCollection`
 setItems replaces the array with new items.
 
-##### `itemActions.addItems(items, unique = 'id', processAll) => itemCollection`
+##### `itemActions.addItems(items, unique = 'id', processAll) => [added items]`
 addItems adds new items into the collection. Give a property name as a string as the `unique` argument to
 make that property value unique among all items in the collection. Pass `false` as the unique argument
 to disable the uniqueness check. The uniqueness check is on by default for the property `id`.
