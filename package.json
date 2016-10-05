@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git://github.com/danieldunderfelt/mobx-app.git"
   },
-  "main": "src/index",
+  "main": "lib/index",
   "scripts": {
     "build": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "preversion": "npm run build"
