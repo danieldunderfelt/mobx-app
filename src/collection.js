@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import invariant from 'invariant'
 import { action, extendObservable, isObservable } from 'mobx'
 
 export default (collection, itemFactory = _.identity) => {
@@ -15,7 +16,10 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Replaces current items with new items
-  const setItems = action((items = []) => collection.replace(items.map(itemFactory)))
+  const setItems = action((items = []) => {
+    const arrItems = _.flatten([ items ])
+    collection.replace(arrItems.map(itemFactory))
+  })
 
   // Gets an item from the collection (not an action per se)
   const getItem = (identifier, key = 'id') => {
