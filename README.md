@@ -21,7 +21,7 @@ With npm:
 
 mobx-app also relies on some peer dependencies that you probably already have in your project:
 
-`npm install --save lodash mobx mobx-react`
+`npm install --save lodash mobx`
 
 Overview
 --------
