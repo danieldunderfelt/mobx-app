@@ -6,7 +6,7 @@ export default (state, property, initial = null) => {
   const setValue = action((value = initial) => state[property] = value )
   const extendValue = action((value = initial) => extendObservable(state[property], value))
 
-  const methodSuffix = _.capitalize(property)
+  const methodSuffix = _.upperFirst(property)
 
   // Because why not yeah
   return {
