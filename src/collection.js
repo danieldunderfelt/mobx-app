@@ -16,7 +16,7 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Replaces current items with new items
-  const setItems = action((items = []) => {
+  const setItems = action('Collection - Set items', (items = []) => {
     const arrItems = _.flatten([ items ])
     collection.replace(arrItems.map(itemFactory))
   })
@@ -39,7 +39,7 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Adds items to the collection. Returns unprocessed array of added items.
-  const addItems = action((items = [], unique = 'id', processAll = _.identity) => {
+  const addItems = action('Collection - Add items', (items = [], unique = 'id', processAll = _.identity) => {
     if ( items.length === 0 ) return [] // Bail early if no items
 
     const itemsArray = _.flatten([ items ]) // Put in one-element array if only passed single item
@@ -63,7 +63,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Adds a single item to the collection, optionally checking for uniqueness.
   // Returns the (unprocessed) added item.
-  const addItem = action((item, unique = 'id', replace = false, first = false) => {
+  const addItem = action('Collection - Add item', (item, unique = 'id', replace = false, first = false) => {
     if ( _.isArrayLike(item) ) {
       console.warn('Tried to add an array as a singular item to a collection. Using addItems instead.')
       return addItems(item, unique)
@@ -90,7 +90,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Updates an item in the collection with new data.
   // Returns the added item.
-  const updateItem = action((item = false, idProp = 'id') => {
+  const updateItem = action('Collection - Update item', (item = false, idProp = 'id') => {
     if ( !item ) return false
     const existingIdx = getIndex(item, idProp)
 
@@ -112,7 +112,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Updates (if exists) or adds an item to the collection.
   // Returns the unprocessed added or updated item.
-  const updateOrAdd = action((item, idProp = 'id', first = false) => {
+  const updateOrAdd = action('Collection - Update or add', (item, idProp = 'id', first = false) => {
     const existingIdx = getIndex(item, idProp)
 
     if ( existingIdx > -1 ) return updateItem(item, idProp)
@@ -120,7 +120,7 @@ export default (collection, itemFactory = _.identity) => {
   })
 
   // Removes an item from the collection
-  const removeItem = action((itemOrIdOrIndex = false, idProp = 'id') => {
+  const removeItem = action('Collection - Remove item', (itemOrIdOrIndex = false, idProp = 'id') => {
     if ( !itemOrIdOrIndex ) return false // Bail early if falsy
 
     const type = typeof itemOrIdOrIndex
@@ -145,7 +145,7 @@ export default (collection, itemFactory = _.identity) => {
     return false
   })
 
-  const clear = action((filterFunction = false) => {
+  const clear = action('Collection - Clear collection', (filterFunction = false) => {
     if(!filterFunction) return collection.clear()
 
     collection.forEach((item, idx) => {

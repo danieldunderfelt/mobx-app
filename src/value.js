@@ -3,8 +3,8 @@ import _ from 'lodash'
 
 export default (state, property, initial = null) => {
 
-  const setValue = action((value = initial) => state[property] = value )
-  const extendValue = action((value = initial) => extendObservable(state[property], value))
+  const setValue = action(`Value ${property} - Set value`, (value = initial) => state[property] = value )
+  const extendValue = action(`Value ${property} - Extend value`, (value = initial) => extendObservable(state[property], value))
 
   const methodSuffix = _.upperFirst(property)
 
