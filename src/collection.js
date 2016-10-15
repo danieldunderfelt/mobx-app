@@ -96,14 +96,15 @@ export default (collection, itemFactory = _.identity) => {
       return item // Bail if it doesn't exist
     }
 
-    if( isObservable(collection[ idx ]) ) {
+    if( isObservable(collection[ existingIdx ]) ) {
       // Extend the new data onto the existing item.
-      return extendObservable(collection[ idx ], item)
+      return extendObservable(collection[ existingIdx ], item)
     } else {
       // If this code runs, the item to add is probably a string or similar simple type.
       // Can't really use extend, so just replace it in the collection.
       const itemToAdd = itemFactory(item)
       collection.splice(existingIdx, 1, itemToAdd)
+
       return itemToAdd
     }
   })
