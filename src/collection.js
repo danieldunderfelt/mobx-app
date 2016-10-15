@@ -11,8 +11,8 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Used in array difference checks
-  const differenceCheck = key => (value, otherValue) => {
-    return equalCheck(value, key, otherValue)
+  const differenceCheck = key => (value) => {
+    return typeof value !== 'object' ? value : _.get(value, key, value)
   }
 
   // Replaces current items with new items
@@ -40,13 +40,11 @@ export default (collection, itemFactory = _.identity) => {
 
   // Adds items to the collection. Returns unprocessed array of added items.
   const addItems = action('Collection - Add items', (items = [], unique = 'id', processAll = _.identity) => {
-    if ( items.length === 0 ) return [] // Bail early if no items
-
     const itemsArray = _.flatten([ items ]) // Put in one-element array if only passed single item
+    if ( itemsArray.length === 0 ) return [] // Bail early if no items
 
     // Get items not already in the collection by unique key (assumes array items are objects)
-    const itemsToAdd = unique === false ? itemsArray :
-                       _.differenceWith(itemsArray, collection.slice(), differenceCheck(unique))
+    const itemsToAdd = unique === false ? itemsArray : _.differenceBy(itemsArray, collection.slice(), differenceCheck(unique))
 
     // If all "new" items already exist, bail.
     if ( itemsToAdd.length === 0 ) return []

@@ -41,3 +41,42 @@ describe('Collections - setItems', () => {
     expect(testCollection.length).toBe(1) // yup still 1 length
   })
 })
+
+describe('Collections - addItems', () => {
+  let testCollection, collectionActions
+
+  beforeEach(() => {
+    testCollection = observable([])
+    collectionActions = collection(testCollection)
+  })
+
+  it(`doesn't freak out from an empty array`, () => {
+    const addedItems = collectionActions.addItems([])
+
+    expect(testCollection.length).toBe(0)
+    expect(addedItems.length).toBe(0)
+  })
+
+  it(`adds the passed items to the collection`, () => {
+    const addedItems = collectionActions.addItems(testData)
+    expect(testCollection.length).toBe(addedItems.length)
+    expect(testCollection[0].id).toBe("1")
+    expect(testCollection[1].id).toBe("2")
+    expect(testCollection[2].id).toBe("3")
+  })
+
+  it(`adds a single item to the collection`, () => {
+    const addedItems = collectionActions.addItems(testData[0])
+    expect(testCollection.length).toBe(1)
+    expect(Array.isArray(addedItems)).toBeTruthy()
+    expect(testCollection[0].id).toBe("1")
+  })
+
+  it(`adds only unique items`, () => {
+    collectionActions.setItems(testData)
+    const addedItems = collectionActions.addItems(testData)
+
+    expect(addedItems.length).toBe(0)
+    expect(testCollection.length).toBe(3)
+  })
+})
