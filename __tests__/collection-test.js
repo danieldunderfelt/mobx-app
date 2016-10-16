@@ -31,11 +31,9 @@ describe('Collections - setItems', () => {
     expect(testCollection[0].name).toBe('fourth')
 
     collectionActions.setItems('newItem')
-
     expect(testCollection[0]).toBe('newItem')
 
     collectionActions.setItems(_.identity)
-
     expect(testCollection[0]('haha')).toBe('haha')
 
     expect(testCollection.length).toBe(1) // yup still 1 length
@@ -59,6 +57,7 @@ describe('Collections - addItems', () => {
 
   it(`adds the passed items to the collection`, () => {
     const addedItems = collectionActions.addItems(testData)
+
     expect(testCollection.length).toBe(addedItems.length)
     expect(testCollection[0].id).toBe("1")
     expect(testCollection[1].id).toBe("2")
@@ -67,6 +66,7 @@ describe('Collections - addItems', () => {
 
   it(`adds a single item to the collection`, () => {
     const addedItems = collectionActions.addItems(testData[0])
+
     expect(testCollection.length).toBe(1)
     expect(Array.isArray(addedItems)).toBeTruthy()
     expect(testCollection[0].id).toBe("1")
@@ -78,5 +78,37 @@ describe('Collections - addItems', () => {
 
     expect(addedItems.length).toBe(0)
     expect(testCollection.length).toBe(3)
+  })
+})
+
+describe(`Collections - addItem`, () => {
+  let testCollection, collectionActions
+
+  beforeEach(() => {
+    testCollection = observable([])
+    collectionActions = collection(testCollection)
+  })
+
+  it(`Doesn't add nonexistent things`, () => {
+    const added = collectionActions.addItem()
+    expect(typeof added).toBe('undefined')
+    expect(testCollection.length).toBe(0)
+  })
+
+  it(`adds a single item to the collection and returns what it added`, () => {
+    expect(testCollection.length).toBe(0)
+    const added = collectionActions.addItem(testData[0])
+
+    expect(added.id).toBe("1")
+    expect(testCollection.length).toBe(1)
+  })
+
+  it(`uses the value from itemFactory(item) when adding to the collection`, () => {
+    collectionActions = collection(testCollection, (item) => 'derp') // Always add derp
+    const added = collectionActions.addItem(testData[0])
+
+    expect(added).toBe("derp")
+    expect(testCollection.length).toBe(1)
+    expect(testCollection[0]).toBe("derp")
   })
 })

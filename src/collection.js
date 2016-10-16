@@ -49,19 +49,24 @@ export default (collection, itemFactory = _.identity) => {
     // If all "new" items already exist, bail.
     if ( itemsToAdd.length === 0 ) return []
 
+    // Run items through the factory
+    const preparedItems = itemsToAdd.map(itemFactory)
+
     // Concatenate the new items, processed through itemFactory, to the existing collection.
-    const allItems = collection.concat(itemsToAdd.map(itemFactory))
+    const allItems = collection.concat(preparedItems)
 
     // Run items through an optional processor (a good opporunity to apply ordering)
     // and replace the current collection with the new one.
     collection.replace(processAll(allItems))
 
-    return itemsToAdd
+    return preparedItems
   })
 
   // Adds a single item to the collection, optionally checking for uniqueness.
   // Returns the (unprocessed) added item.
   const addItem = action('Collection - Add item', (item, unique = 'id', replace = false, first = false) => {
+    if(typeof item === 'undefined') return
+
     if ( _.isArrayLike(item) ) {
       console.warn('Tried to add an array as a singular item to a collection. Using addItems instead.')
       return addItems(item, unique)
@@ -83,7 +88,7 @@ export default (collection, itemFactory = _.identity) => {
       first ? collection.unshift(preparedItem) : collection.push(preparedItem)
     }
 
-    return item
+    return preparedItem
   })
 
   // Updates an item in the collection with new data.
