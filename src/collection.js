@@ -68,7 +68,6 @@ export default (collection, itemFactory = _.identity) => {
     if(typeof item === 'undefined') return
 
     if ( _.isArrayLike(item) ) {
-      console.warn('Tried to add an array as a singular item to a collection. Using addItems instead.')
       return addItems(item, unique)
     }
 
@@ -125,7 +124,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Removes an item from the collection
   const removeItem = action('Collection - Remove item', (itemOrIdOrIndex = false, idProp = 'id') => {
-    if ( !itemOrIdOrIndex ) return false // Bail early if falsy
+    if ( itemOrIdOrIndex === false ) return false // Bail early if falsy
 
     const type = typeof itemOrIdOrIndex
     let removeIdx = -1 // Start off carefully...
