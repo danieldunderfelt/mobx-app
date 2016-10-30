@@ -2,7 +2,11 @@ import _ from 'lodash'
 import invariant from 'invariant'
 import { action, extendObservable, isObservable } from 'mobx'
 
-export default (collection, itemFactory = _.identity) => {
+export default (collection, itemFactory = _.identity, name = 'Collection') => {
+
+  function getActionName(description) {
+    return `${name} - ${description}`
+  }
 
   // Checks prop on item, or if prop is undefined item directly, against checkValue.
   function equalCheck(item, prop, checkValue) {
@@ -16,7 +20,7 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Replaces current items with new items
-  const setItems = action('Collection - Set items', (items = []) => {
+  const setItems = action(getActionName('Set items'), (items = []) => {
     const arrItems = _.flatten([ items ])
     collection.replace(arrItems.map(itemFactory))
   })
@@ -39,7 +43,7 @@ export default (collection, itemFactory = _.identity) => {
   }
 
   // Adds items to the collection. Returns unprocessed array of added items.
-  const addItems = action('Collection - Add items', (items = [], unique = 'id', processAll = _.identity) => {
+  const addItems = action(getActionName('Add items'), (items = [], unique = 'id', processAll = _.identity) => {
     const itemsArray = _.flatten([ items ]) // Put in one-element array if only passed single item
     if ( itemsArray.length === 0 ) return [] // Bail early if no items
 
@@ -64,7 +68,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Adds a single item to the collection, optionally checking for uniqueness.
   // Returns the (unprocessed) added item.
-  const addItem = action('Collection - Add item', (item, unique = 'id', replace = false, first = false) => {
+  const addItem = action(getActionName('Add item'), (item, unique = 'id', replace = false, first = false) => {
     if(typeof item === 'undefined') return
 
     if ( _.isArrayLike(item) ) {
@@ -92,7 +96,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Updates an item in the collection with new data.
   // Returns the added item.
-  const updateItem = action('Collection - Update item', (item = false, idProp = 'id') => {
+  const updateItem = action(getActionName('Update item'), (item = false, idProp = 'id') => {
     if ( !item ) return false
     const existingIdx = getIndex(item, idProp)
 
@@ -115,7 +119,7 @@ export default (collection, itemFactory = _.identity) => {
 
   // Updates (if exists) or adds an item to the collection.
   // Returns the unprocessed added or updated item.
-  const updateOrAdd = action('Collection - Update or add', (item, idProp = 'id', first = false) => {
+  const updateOrAdd = action(getActionName('Update or add'), (item, idProp = 'id', first = false) => {
     const existingIdx = getIndex(item, idProp)
 
     if ( existingIdx > -1 ) return updateItem(item, idProp)
@@ -123,7 +127,7 @@ export default (collection, itemFactory = _.identity) => {
   })
 
   // Removes an item from the collection
-  const removeItem = action('Collection - Remove item', (itemOrIdOrIndex = false, idProp = 'id') => {
+  const removeItem = action(getActionName('Remove item'), (itemOrIdOrIndex = false, idProp = 'id') => {
     if ( itemOrIdOrIndex === false ) return false // Bail early if falsy
 
     const type = typeof itemOrIdOrIndex
@@ -148,7 +152,7 @@ export default (collection, itemFactory = _.identity) => {
     return false
   })
 
-  const clear = action('Collection - Clear collection', (filterFunction = false) => {
+  const clear = action(getActionName('Clear'), (filterFunction = false) => {
     if(!filterFunction) return collection.clear()
 
     collection.forEach((item, idx) => {
