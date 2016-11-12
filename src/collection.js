@@ -171,6 +171,7 @@ export default (collection, itemFactory = _.identity, name = 'Collection') => {
     addItem,
     addItems,
     updateItem,
-    updateOrAdd
+    updateOrAdd,
+    clear
   }
 }
