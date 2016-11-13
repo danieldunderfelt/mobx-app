@@ -8,6 +8,39 @@ const testData = [
   { id: "3", name: "third" },
 ]
 
+describe('Collections - init', () => {
+
+  it('can be assigned a factory function', () => {
+    const testCollection = collection([], () => 'factory')
+    expect(testCollection.$collection.factory()).toBe('factory')
+  })
+
+  it('will use lodash identity as factory by default', () => {
+    const testCollection = collection([])
+    expect(testCollection.$collection.factory).toBe(_.identity)
+  })
+
+  it('can be assigned a name in the same argument place as factories', () => {
+    const testCollection = collection([], 'TestCollection')
+
+    expect(testCollection.$collection.factory).toBe(_.identity)
+    expect(testCollection.$collection.name).toBe('TestCollection')
+  })
+
+  it('is named `Collection` by default', () => {
+    const testCollection = collection([])
+
+    expect(testCollection.$collection.factory).toBe(_.identity)
+    expect(testCollection.$collection.name).toBe('Collection')
+  })
+
+  it('throws if itemFactory returns undefined', () => {
+    expect(() => {
+      collection([], () => {})
+    }).toThrowError(/itemFactory needs to return something/)
+  })
+})
+
 describe('Collections - setItems', () => {
   let testCollection, collectionActions
 

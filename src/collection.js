@@ -2,7 +2,12 @@ import _ from 'lodash'
 import invariant from 'invariant'
 import { action, extendObservable, isObservable } from 'mobx'
 
-export default (collection, itemFactory = _.identity, name = 'Collection') => {
+export default (collection, factoryOrName = _.identity, optName = 'Collection') => {
+
+  const itemFactory = typeof factoryOrName === 'function' ? factoryOrName : _.identity
+  const name = typeof factoryOrName === 'string' ? factoryOrName : optName
+
+  invariant(typeof itemFactory({}) !== 'undefined', 'Your itemFactory needs to return something for collections to work!')
 
   function getActionName(description) {
     return `${name} - ${description}`
@@ -163,6 +168,9 @@ export default (collection, itemFactory = _.identity, name = 'Collection') => {
   })
 
   return {
+    $collection: {
+      name, factory: itemFactory
+    },
     setItems,
     getItem,
     getIndex,
