@@ -33,12 +33,6 @@ describe('Collections - init', () => {
     expect(testCollection.$collection.factory).toBe(_.identity)
     expect(testCollection.$collection.name).toBe('Collection')
   })
-
-  it('throws if itemFactory returns undefined', () => {
-    expect(() => {
-      collection([], () => {})
-    }).toThrowError(/itemFactory needs to return something/)
-  })
 })
 
 describe('Collections - setItems', () => {
