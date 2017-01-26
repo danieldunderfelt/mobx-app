@@ -7,8 +7,6 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
   const itemFactory = typeof factoryOrName === 'function' ? factoryOrName : _.identity
   const name = typeof factoryOrName === 'string' ? factoryOrName : optName
 
-  invariant(typeof itemFactory({}) !== 'undefined', 'Your itemFactory needs to return something for collections to work!')
-
   function getActionName(description) {
     return `${name} - ${description}`
   }
