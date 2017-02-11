@@ -7,6 +7,17 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
   const itemFactory = typeof factoryOrName === 'function' ? factoryOrName : _.identity
   const name = typeof factoryOrName === 'string' ? factoryOrName : optName
 
+  function manufactureItems(items) {
+    return items.reduce((all, item) => {
+      const manufactured = itemFactory(item)
+
+      // Include item only if factory returns truthy
+      if(!!manufactured) all.push(manufactured)
+
+      return all
+    }, [])
+  }
+
   function getActionName(description) {
     return `${name} - ${description}`
   }
@@ -57,7 +68,7 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
     if ( itemsToAdd.length === 0 ) return []
 
     // Run items through the factory
-    const preparedItems = itemsToAdd.map(itemFactory)
+    const preparedItems = manufactureItems(itemsToAdd)
 
     // Concatenate the new items, processed through itemFactory, to the existing collection.
     const allItems = collection.concat(preparedItems)
@@ -72,8 +83,9 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
   // Adds a single item to the collection, optionally checking for uniqueness.
   // Returns the (unprocessed) added item.
   const addItem = action(getActionName('Add item'), (item, unique = 'id', replace = false, first = false) => {
-    if(typeof item === 'undefined') return
+    if(typeof item === 'undefined') return // Do not check for falsiness as that is a valid value.
 
+    // Defer to addItems if array
     if ( _.isArrayLike(item) ) {
       return addItems(item, unique)
     }
@@ -151,7 +163,7 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
     // Only do anything if idx is sane. Return the removed item.
     if ( removeIdx > -1 ) return collection.splice(removeIdx, 1)[ 0 ]
 
-    // We've acomplished nothing.
+    // We've accomplished nothing.
     return false
   })
 

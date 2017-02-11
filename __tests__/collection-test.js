@@ -106,6 +106,13 @@ describe('Collections - addItems', () => {
     expect(addedItems.length).toBe(0)
     expect(testCollection.length).toBe(3)
   })
+
+  it('adds only truthy items', () => {
+    const addedItems = collectionActions.addItems([ true, false, 1, 0, undefined, null, 'true' ])
+
+    expect(addedItems.length).toBe(3)
+    expect(testCollection.length).toBe(3)
+  })
 })
 
 describe(`Collections - addItem`, () => {
