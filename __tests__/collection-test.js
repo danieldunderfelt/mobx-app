@@ -1,6 +1,6 @@
 import { extendObservable, observable } from 'mobx'
 import collection from '../src/collection'
-import _ from 'lodash'
+import identity from 'lodash/identity'
 
 const testData = [
   { id: "1", name: "first" },
@@ -17,20 +17,20 @@ describe('Collections - init', () => {
 
   it('will use lodash identity as factory by default', () => {
     const testCollection = collection([])
-    expect(testCollection.$collection.factory).toBe(_.identity)
+    expect(testCollection.$collection.factory).toBe(identity)
   })
 
   it('can be assigned a name in the same argument place as factories', () => {
     const testCollection = collection([], 'TestCollection')
 
-    expect(testCollection.$collection.factory).toBe(_.identity)
+    expect(testCollection.$collection.factory).toBe(identity)
     expect(testCollection.$collection.name).toBe('TestCollection')
   })
 
   it('is named `Collection` by default', () => {
     const testCollection = collection([])
 
-    expect(testCollection.$collection.factory).toBe(_.identity)
+    expect(testCollection.$collection.factory).toBe(identity)
     expect(testCollection.$collection.name).toBe('Collection')
   })
 })
@@ -60,7 +60,7 @@ describe('Collections - setItems', () => {
     collectionActions.setItems('newItem')
     expect(testCollection[0]).toBe('newItem')
 
-    collectionActions.setItems(_.identity)
+    collectionActions.setItems(identity)
     expect(testCollection[0]('haha')).toBe('haha')
 
     expect(testCollection.length).toBe(1) // yup still 1 length
