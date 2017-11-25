@@ -1,11 +1,11 @@
 import { observable } from 'mobx'
-import _ from 'lodash'
+import forOwn from 'lodash/forOwn'
 
 export default (stores = {}, initialData = {}) => {
   const state = observable({})
   const actions = {}
 
-  _.forOwn(stores, (store, key) => {
+  forOwn(stores, (store, key) => {
     const storeActions = store(state, initialData, key)
     actions[ key ] = storeActions
   })

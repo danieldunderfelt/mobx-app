@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import pick from 'lodash/pick'
 
 export default (...keys) => ({ actions, state }) => {
   // If no keys were specified, just return the action and state
@@ -6,7 +6,7 @@ export default (...keys) => ({ actions, state }) => {
   if( keys[0] === 'state' ) return { state }
 
   return {
-    ..._.pick(actions, keys),
+    ...pick(actions, keys),
     state
   }
 }

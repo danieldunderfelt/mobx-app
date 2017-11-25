@@ -1,10 +1,14 @@
-import _ from 'lodash'
+import differenceBy from 'lodash/differenceBy'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
 import invariant from 'invariant'
+import isArrayLike from 'lodash/isArrayLike'
 import { action, extendObservable, isObservable } from 'mobx'
 
-export default (collection, factoryOrName = _.identity, optName = 'Collection') => {
+export default (collection, factoryOrName = identity, optName = 'Collection') => {
 
-  const itemFactory = typeof factoryOrName === 'function' ? factoryOrName : _.identity
+  const itemFactory = typeof factoryOrName === 'function' ? factoryOrName : identity
   const name = typeof factoryOrName === 'string' ? factoryOrName : optName
 
   function manufactureItems(items) {
@@ -24,24 +28,24 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
 
   // Checks prop on item, or if prop is undefined item directly, against checkValue.
   function equalCheck(item, prop, checkValue) {
-    const checkAgainst = typeof item !== 'object' ? item : _.get(item, prop, item)
+    const checkAgainst = typeof item !== 'object' ? item : get(item, prop, item)
     return checkAgainst === checkValue
   }
 
   // Used in array difference checks
   const differenceCheck = key => (value) => {
-    return typeof value !== 'object' ? value : _.get(value, key, value)
+    return typeof value !== 'object' ? value : get(value, key, value)
   }
 
   // Replaces current items with new items
   const setItems = action(getActionName('Set items'), (items = []) => {
-    const arrItems = _.flatten([ items ])
+    const arrItems = flatten([ items ])
     collection.replace(arrItems.map(itemFactory))
   })
 
   // Gets an item from the collection (not an action per se)
   const getItem = (identifier, key = 'id') => {
-    const id = _.get(identifier, key, identifier)
+    const id = get(identifier, key, identifier)
     const item = collection.find(item => equalCheck(item, key, identifier))
 
     return typeof item !== 'undefined' ? item : null
@@ -52,17 +56,17 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
   }
 
   const getIndex = (item, key = 'id') => {
-    const id = _.get(item, key, item)
+    const id = get(item, key, item)
     return collection.findIndex(el => equalCheck(el, key, id))
   }
 
   // Adds items to the collection. Returns unprocessed array of added items.
-  const addItems = action(getActionName('Add items'), (items = [], unique = 'id', processAll = _.identity) => {
-    const itemsArray = _.flatten([ items ]) // Put in one-element array if only passed single item
+  const addItems = action(getActionName('Add items'), (items = [], unique = 'id', processAll = identity) => {
+    const itemsArray = flatten([ items ]) // Put in one-element array if only passed single item
     if ( itemsArray.length === 0 ) return [] // Bail early if no items
 
     // Get items not already in the collection by unique key (assumes array items are objects)
-    const itemsToAdd = unique === false ? itemsArray : _.differenceBy(itemsArray, collection.slice(), differenceCheck(unique))
+    const itemsToAdd = unique === false ? itemsArray : differenceBy(itemsArray, collection.slice(), differenceCheck(unique))
 
     // If all "new" items already exist, bail.
     if ( itemsToAdd.length === 0 ) return []
@@ -86,7 +90,7 @@ export default (collection, factoryOrName = _.identity, optName = 'Collection') 
     if(typeof item === 'undefined') return // Do not check for falsiness as that is a valid value.
 
     // Defer to addItems if array
-    if ( _.isArrayLike(item) ) {
+    if ( isArrayLike(item) ) {
       return addItems(item, unique)
     }
 
