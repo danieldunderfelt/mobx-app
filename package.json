@@ -37,6 +37,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "@expo/mux": "^1.0.7",
     "invariant": "^2.2.1"
   }
 }
