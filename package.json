@@ -1,6 +1,6 @@
 {
   "name": "mobx-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MobX, with a functional structure.",
   "repository": {
     "type": "git",
