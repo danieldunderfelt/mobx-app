@@ -10,31 +10,18 @@
  */
 
 import isPlainObject from 'lodash/isPlainObject'
-import zip from 'lodash/zip'
 
-export default async function mux(promises) {
+export default function mux(promises) {
   if( promises == null ) {
     return promises
   }
   
   if( typeof promises.then === 'function' ) {
-    let value = await promises
-    return mux(value)
+    return promises.then(mux)
   }
   
   if( Array.isArray(promises) ) {
     return Promise.all(promises.map(mux))
-  }
-  
-  if( promises instanceof Map ) {
-    let keys = [ ...promises.keys() ]
-    let values = await Promise.all([ ...promises.values() ].map(mux))
-    return new Map(zip(keys, values))
-  }
-  
-  if( promises instanceof Set ) {
-    let values = await Promise.all([ ...promises.values() ].map(mux))
-    return new Set(values)
   }
   
   if( isPlainObject(promises) ) {
@@ -43,14 +30,17 @@ export default async function mux(promises) {
     for( let key of keys ) {
       values.push(promises[ key ])
     }
-    values = await Promise.all(values.map(mux))
     
-    let result = Object.create(Object.getPrototypeOf(promises))
-    let keyCount = keys.length
-    for( let ii = 0; ii < keyCount; ii++ ) {
-      result[ keys[ ii ] ] = values[ ii ]
-    }
-    return result
+    return Promise
+      .all(values.map(mux))
+      .then(values => {
+        let result = Object.create(Object.getPrototypeOf(promises))
+        let keyCount = keys.length
+        for( let ii = 0; ii < keyCount; ii++ ) {
+          result[ keys[ ii ] ] = values[ ii ]
+        }
+        return result
+      })
   }
   
   return promises
