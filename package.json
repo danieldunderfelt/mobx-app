@@ -1,6 +1,6 @@
 {
   "name": "mobx-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MobX, with a functional structure.",
   "repository": {
     "type": "git",
@@ -37,7 +37,6 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@expo/mux": "^1.0.7",
     "invariant": "^2.2.1"
   }
 }

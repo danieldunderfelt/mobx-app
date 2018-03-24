@@ -94,7 +94,7 @@ with a handful of actions for setting values and working with collections. You k
 do in an app.
 
 "Actions" can also be functions that do not directly mutate the state, for example fetcher functions for your api.
-Feel free to include these in the umbrella term `actions` and even define them in the same factory as other actions.
+I include these in the umbrella term `actions` and even define them in the same factory as other actions.
 They are, after all, actions that your app can perform.
 
 An example of an action factory:
@@ -113,7 +113,8 @@ const storeActions = state => {
     })
     
     async function fetchItems(params) {
-        const newItems = await fetch('https://example.com/api/items')
+        const newItemsReq = await fetch('https://example.com/api/items')
+        const newItems = await newItemsReq.json()
         replaceItems(newItems)
     }
     

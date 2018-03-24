@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import forOwn from 'lodash/forOwn'
-import mux from '@expo/mux'
+import mux from './utils/mux'
 
 export default (stores = {}, initialData = {}) => {
   const state = observable({})
